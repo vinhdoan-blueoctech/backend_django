@@ -1,14 +1,17 @@
-from django.urls import path
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from ecommerce import views
 
-urlpatterns = [
-    path("permissions/", views.PermissionList.as_view()),
-    path("permissions/<int:pk>/", views.PermissionDetail.as_view()),
-    path("roles/", views.RoleList.as_view()),
-    path("roles/<int:pk>/", views.RoleDetail.as_view()),
-    path("users/", views.PersonList.as_view()),
-    path("users/<int:pk>/", views.PersonDetail.as_view()),
-]
+router = DefaultRouter()
+router.register(r"roles", views.RoleDetail, basename="role")
+router.register(r"persons", views.PersonDetail, basename="person")
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = [
+    path("permissions/", views.PermissionList.as_view(), name="permission-list"),
+    path(
+        "permissions/<int:pk>/",
+        views.PermissionDetail.as_view(),
+        name="permission-detail",
+    ),
+    path("", include(router.urls)),
+]

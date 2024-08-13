@@ -12,14 +12,11 @@ class Permission(models.Model):
 
 
 class Role(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     permissions = models.ManyToManyField(Permission, related_name="roles")
 
     def __str__(self):
         return self.name
-
-    def get_permissions(self):
-        return Permission.objects.filter(roles=self).distinct()
 
 
 class Person(models.Model):
